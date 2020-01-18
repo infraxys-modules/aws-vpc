@@ -1,0 +1,97 @@
+{
+  "version": "1.0",
+  "description": "VPC with private, shared and public subnet",
+  "guid": "github.com\\infraxys-modules\\aws-vpc\\master\\role\\vpc with private, shared and public subneta",
+  "remarks": "",
+  "requiredPackets": [
+    {
+      "packetKey": "AWS-CORE-VARIABLES"
+    },
+    {
+      "packetKey": "AWS-VPC-VARIABLES"
+    }
+  ],
+  "instances": [
+    {
+      "guid": "guid-46700",
+      "packetGuid": "github.com\\infraxys-modules\\aws-vpc\\master\\aws eip",
+      "velocityName": "",
+      "instanceGroups": "",
+      "eip_count": "$aws_vpc_az_count",
+      "instance_label": "Static NAT IPs",
+      "last_terraform_output": "{}",
+      "tags": "$container.getAttribute(\"aws_core_tag_list\").replaceAll(\"\u003cname\u003e\", \"$container.getAttribute(\u0027aws_vpc_name_prefix\u0027)-nat-eip\")",
+      "terraform_version": "0.12.12",
+      "instances": [
+        {
+          "guid": "guid-46701",
+          "packetGuid": "github.com\\infraxys-modules\\terraform\\master\\terraform s3 remote state",
+          "velocityName": "",
+          "instanceGroups": "",
+          "state_aws_region": "$aws_core_region",
+          "state_encrypt_file": "1",
+          "state_key": "$aws_core_s3_state_folder/nat-eip.tfstate",
+          "state_s3_bucket": "$aws_core_s3_state_bucket"
+        }
+      ]
+    },
+    {
+      "guid": "guid-46696",
+      "packetGuid": "github.com\\infraxys-modules\\aws-vpc\\master\\aws vpc - private shared and public subnets",
+      "velocityName": "",
+      "instanceGroups": "",
+      "aws_region": "$container.getAttribute(\"aws_vpc_region\")",
+      "az_count": "$container.getAttribute(\"aws_vpc_az_count\")",
+      "create_bastion": "1",
+      "last_terraform_output": "{}",
+      "nat_scenario": "$container.getAttribute(\"aws_vpc_nat_scenario\")",
+      "terraform_version": "0.12.12",
+      "vpc_cidr": "$container.getAttribute(\"aws_vpc_cidr\")",
+      "vpc_name": "$instance.getAttribute(\"vpc_name_prefix\")-vpc",
+      "vpc_name_prefix": "$container.getAttribute(\"aws_vpc_name_prefix\")",
+      "vpc_propagated_tag_list": "$container.getAttribute(\"aws_core_propagated_tag_list\").replaceAll(\"\u003cname\u003e\", \"$instance.getAttribute(\u0027vpc_name_prefix\u0027)\u003csuffix\u003e\")",
+      "vpc_tag_list": "$container.getAttribute(\"aws_core_tag_list\").replaceAll(\"\u003cname\u003e\", \"$instance.getAttribute(\u0027vpc_name_prefix\u0027)\u003csuffix\u003e\")",
+      "instances": [
+        {
+          "guid": "guid-46699",
+          "packetGuid": "github.com\\infraxys-modules\\terraform\\master\\terraform s3 remote state",
+          "velocityName": "",
+          "instanceGroups": "",
+          "state_aws_region": "$instance.parent.getAttribute(\"aws_region\")",
+          "state_encrypt_file": "1",
+          "state_key": "$aws_core_s3_state_folder/vpc.tfstate",
+          "state_s3_bucket": "$aws_core_s3_state_bucket"
+        },
+        {
+          "guid": "guid-46697",
+          "packetGuid": "github.com\\infraxys-modules\\aws-ec2\\master\\aws bastion host",
+          "velocityName": "",
+          "instanceGroups": "",
+          "bastion_name": "$container.getAttribute(\"aws_vpc_bastion_name\")",
+          "image_id": "ami-07683a44e80cd32c5",
+          "instance_type": "t3.nano",
+          "key_pair_name": "$container.getAttribute(\"aws_vpc_bastion_key_pair_name\")",
+          "private_key_file": "/root/.ssh/keys/${instance.getAttribute(\"key_pair_name\").replaceAll(\"-\", \"_\")}.pem",
+          "propagated_tag_list": "$vpc_propagated_tag_list.replaceAll(\"\u003csuffix\u003e\", \"-bastion-asg\")\n",
+          "ssh_username": "ec2-user",
+          "tag_list": "$vpc_tag_list.replaceAll(\"\u003csuffix\u003e\", \"-bastion-asg\")\n",
+          "whitelist": "\"0.0.0.0/0\"",
+          "instances": [
+            {
+              "guid": "guid-46698",
+              "packetGuid": "github.com\\infraxys-modules\\aws-ec2\\master\\security group",
+              "velocityName": "",
+              "instanceGroups": "",
+              "description": "Security group  to access its AMIs through the bastion host",
+              "egress_rules": "  egress {\n    protocol \u003d -1\n    from_port \u003d 0\n    to_port \u003d 0\n    cidr_blocks \u003d [\n      \"0.0.0.0/0\"\n    ]\n  }",
+              "extra_terraform": "",
+              "ingress_rules": "  ingress {\n    protocol    \u003d \"tcp\"\n    from_port   \u003d 22\n    to_port     \u003d 22\n    cidr_blocks \u003d [$instance.parent.getAttribute(\"whitelist\")]\n  }",
+              "security_group_name": "bastion-sg",
+              "tags": "$instance.parent.getAttribute(\"vpc_tag_list\").replaceAll(\"\u003csuffix\u003e\", \"-bastion-sg\")"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
