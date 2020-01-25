@@ -1,7 +1,8 @@
 {
   "version": "1.0",
   "description": "VPC with private, shared and public subnet",
-  "guid": "github.com\\infraxys-modules\\aws-vpc\\master\\role\\vpc with private, shared and public subnet",
+  "name": "VPC with private, shared and public subnet",
+  "guid": "89bf0b75-4148-43e6-9a08-a9c0dbfe1612",
   "group": "AWS",
   "remarks": "",
   "requiredPackets": [
