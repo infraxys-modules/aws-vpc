@@ -1,7 +1,7 @@
 {
   "version": "1.0",
   "description": "VPC with private, shared and public subnet",
-  "guid": "github.com\\infraxys-modules\\aws-vpc\\master\\role\\vpc with private, shared and public subnetb",
+  "guid": "github.com\\infraxys-modules\\aws-vpc\\master\\role\\vpc with private, shared and public subnet",
   "group": "AWS",
   "remarks": "",
   "requiredPackets": [
@@ -10,6 +10,9 @@
     },
     {
       "packetKey": "AWS-VPC-VARIABLES"
+    },
+    {
+      "packetGuid": "github.com\\infraxys-modules\\aws-vpc\\master\\aws bastion variables"
     }
   ],
   "instances": [
@@ -75,9 +78,9 @@
       "guid": "guid-46433",
       "packetGuid": "github.com\\infraxys-modules\\aws-vpc\\master\\aws eip",
       "instanceGroups": "",
+      "aws_region": "$container.getAttribute(\"aws_vpc_region\")",
       "eip_count": "$aws_vpc_az_count",
       "instance_label": "Static NAT IPs",
-      "last_terraform_output": "{}",
       "tags": "$container.getAttribute(\"aws_core_tag_list\").replaceAll(\"\u003cname\u003e\", \"$container.getAttribute(\u0027aws_vpc_name_prefix\u0027)-nat-eip\")",
       "terraform_version": "0.12.12",
       "instances": [

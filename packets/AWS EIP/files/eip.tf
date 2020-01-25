@@ -19,7 +19,7 @@ output "ips" {
 
 #if (! $instance.getParentInstanceByPacketType("TERRAFORM-AWS-RUNNER"))
 provider "aws" {
-  region = "us-east-1"
+  region = "$instance.getAttribute("aws_region")"
   version = "~> 2.32.0"
 }
 
